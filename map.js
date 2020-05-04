@@ -61,9 +61,6 @@ var showError = function (error, code) {
     systemErrorCodeElem.innerText = code;
     systemErrorCodeElem.style.display = 'inline';
   }
-  mapContainerElem.style.display = 'none';
-  mapElem.style.display = 'none';
-  listElem.style.display = 'none';
   console.error(error);
 };
 
