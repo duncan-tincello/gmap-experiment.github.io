@@ -35,7 +35,7 @@ function createCORSRequest(method, url) {
 
 var map;
 var youAreHereMarker;
-var isNotSupported = true;
+var isNotSupported = false;
 var locationMarkers = [];
 var getCurrentLocation = document.getElementById('current-location');
 var mapContainerElem = document.getElementById('map-container');
