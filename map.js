@@ -47,37 +47,13 @@ var zeroResultsElem = document.getElementById('not-found');
 var locationField = document.getElementById('location');
 var template = document.getElementById('template');
 var apiKey = '';
-var geolocateUrl = 'https://www.googleapis.com/geolocation/v1/geolocate?key=';
+var geolocateUrl = 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCcoolkoC4aNF--lE0PezMkiZ2zMTekVJU';
 
 var showIsNotSupported = function () {
   document.getElementById('lookup').disabled = true;
   document.getElementById('not-supported').style.display = 'block';
   isNotSupported = true;
 };
-
-var getApiKey = createCORSRequest('GET', '/api/map');
-
-if (getApiKey) {
-  // Disabled by default so it prevents use if JavaScript is disabled.
-  document.getElementById('lookup').disabled = false;
-  getCurrentLocation.disabled = false;
-} else {
-  document.getElementById('not-supported').style.display = 'block';
-}
-
-getApiKey.onload = function () {
-  isNotSupported = false;
-  json = JSON.parse(getApiKey.responseText);
-  if (json && json.sets && json.sets.api && json.sets.api.key) {
-    geolocateUrl += json.sets.api.key;
-  }
-};
-
-getApiKey.onerror = function () {
-  showIsNotSupported();
-};
-
-getApiKey.send();
 
 var showError = function (error, code) {
   systemErrorElem.style.display = 'block';
@@ -139,105 +115,92 @@ var showMap = function (location) {
   mapElem.style.display = 'flex';
   listElem.style.display = 'flex';
 
-  // Fetch the nearest stores.
-  var storesNearUrl = '/api/locations?lat=';
-  storesNearUrl += location.lat;
-  storesNearUrl += '&lng=';
-  storesNearUrl += location.lng;
+  var markers = [
+    {
+      heading: 'BATH',
+      latitude: 51.3798438,
+      longitude: -2.3591648
+    },
+    {
+      heading: 'YEOVIL',
+      latitude: 50.9415691,
+      longitude: -2.6313743
+    },
+  ];
 
-  getAjax(storesNearUrl, function (data) {
-    var json,
-      headingElem, distanceElem, addressElem, notesElem, storeElem,
-      fragment, children, newMarker;
+  var headingElem, distanceElem, addressElem, notesElem, storeElem, fragment, children, newMarker;
 
   try {
-      json = JSON.parse(data);
-      if (!json || !json.status) {
-        throw new Error('API status not found');
-      }
-      if (json.status !== 'ok') {
-        throw new Error('API status error: ' + json.status);
-      }
-      if (!json.sets) {
-        throw new Error('API sets not found');
-      }
-      if (!json.sets.markers || !json.sets.markers.length) {
-        throw new Error('API markers not found');
-      }
-
-      // Remove old location labels first.
-      while (listElem.firstChild) {
-        // Thanks to https://stackoverflow.com/a/3955238
-        listElem.removeChild(listElem.lastChild);
-      }
-
-      for (i = 0; i < json.sets.markers.length; i += 1) {
-
-        // Polyfill for HTML template tag, with thanks to
-        // https://stackoverflow.com/a/33138997
-        if('content' in document.createElement('template')) {
-          storeElem = document.importNode(template.content, true);
-        } else {
-          fragment = document.createDocumentFragment();
-          children = template.childNodes;
-          for (i = 0; i < children.length; i += 1) {
-              fragment.appendChild(children[i].cloneNode(true));
-          }
-          storeElem = fragment;
-        }
-
-        listElem.appendChild(storeElem);
-
-        countElem = document.getElementById('n');
-        if (countElem) {
-          countElem.innerText = (i + 1);
-          countElem.id = 'n' + (i + 1);
-        }
-
-        headingElem = document.getElementById('heading');
-        if (headingElem && json.sets.markers[i].heading) {
-          headingElem.innerText = json.sets.markers[i].heading;
-          headingElem.id = 'heading' + (i + 1);
-        }
-
-        distanceElem = document.getElementById('distance');
-        if (distanceElem && json.sets.markers[i].distance) {
-          distanceElem.innerText = json.sets.markers[i].distance;
-          distanceElem.id = 'distance' + (i + 1);
-        }
-
-        addressElem = document.getElementById('address');
-        if (addressElem && json.sets.markers[i].address) {
-          addressElem.innerText = json.sets.markers[i].address;
-          addressElem.id = 'address' + (i + 1);
-        }
-
-        notesElem = document.getElementById('notes');
-        if (notesElem && json.sets.markers[i].notes) {
-          notesElem.innerText = json.sets.markers[i].notes;
-          notesElem.id = 'notes' + (i + 1);
-        }
-
-        // https://developers.google.com/maps/documentation/javascript/markers
-        newMarker = new google.maps.Marker({
-          position: {
-            lat: parseFloat(json.sets.markers[i].latitude),
-            lng: parseFloat(json.sets.markers[i].longitude)
-          },
-          map: map,
-          title: json.sets.markers[i].heading,
-          label: (i + 1).toString()
-        });
-
-        locationMarkers.push(newMarker);
-      }
-
-    } catch (error) {
-      showError(error);
+    // Remove old location labels first.
+    while (listElem.firstChild) {
+      // Thanks to https://stackoverflow.com/a/3955238
+      listElem.removeChild(listElem.lastChild);
     }
 
-  });
+    for (i = 0; i < markers.length; i += 1) {
 
+      // Polyfill for HTML template tag, with thanks to
+      // https://stackoverflow.com/a/33138997
+      if('content' in document.createElement('template')) {
+        storeElem = document.importNode(template.content, true);
+      } else {
+        fragment = document.createDocumentFragment();
+        children = template.childNodes;
+        for (i = 0; i < children.length; i += 1) {
+            fragment.appendChild(children[i].cloneNode(true));
+        }
+        storeElem = fragment;
+      }
+
+      listElem.appendChild(storeElem);
+
+      countElem = document.getElementById('n');
+      if (countElem) {
+        countElem.innerText = (i + 1);
+        countElem.id = 'n' + (i + 1);
+      }
+
+      headingElem = document.getElementById('heading');
+      if (headingElem && markers[i].heading) {
+        headingElem.innerText = markers[i].heading;
+        headingElem.id = 'heading' + (i + 1);
+      }
+
+      distanceElem = document.getElementById('distance');
+      if (distanceElem && markers[i].distance) {
+        distanceElem.innerText = markers[i].distance;
+        distanceElem.id = 'distance' + (i + 1);
+      }
+
+      addressElem = document.getElementById('address');
+      if (addressElem && markers[i].address) {
+        addressElem.innerText = markers[i].address;
+        addressElem.id = 'address' + (i + 1);
+      }
+
+      notesElem = document.getElementById('notes');
+      if (notesElem && markers[i].notes) {
+        notesElem.innerText = markers[i].notes;
+        notesElem.id = 'notes' + (i + 1);
+      }
+
+      // https://developers.google.com/maps/documentation/javascript/markers
+      newMarker = new google.maps.Marker({
+        position: {
+          lat: parseFloat(markers[i].latitude),
+          lng: parseFloat(markers[i].longitude)
+        },
+        map: map,
+        title: markers[i].heading,
+        label: (i + 1).toString()
+      });
+
+      locationMarkers.push(newMarker);
+    }
+
+  } catch (error) {
+    showError(error);
+  }
 };
 
 // Google Maps calls this when it has loaded.
