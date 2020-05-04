@@ -47,7 +47,7 @@ var zeroResultsElem = document.getElementById('not-found');
 var locationField = document.getElementById('location');
 var template = document.getElementById('template');
 var apiKey = '';
-var geolocateUrl = 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCcoolkoC4aNF--lE0PezMkiZ2zMTekVJU';
+var geolocateUrl = 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyB32OeRLnt84wse-xVAR01T8QQc2dqCcYU';
 
 var showIsNotSupported = function () {
   document.getElementById('lookup').disabled = true;
