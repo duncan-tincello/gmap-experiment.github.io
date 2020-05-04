@@ -73,29 +73,6 @@
     </div>
 </section>
 
-<?php /*
-Notes on stying this page:
-
-This page is designed so that it will work with map.js included with this addon.
-To make it work you must preserve a few elements, element IDs and class names as
-described here. Within these constraints, you should be able to style the map and
-list to suit your needs. We have included some simple styling to get you started.
-You may prefer to assign classes and integrate the CSS with your site build process.
-
-You must ensure that the #map and #list DIV elements are present inside a DIV
-with id = "map-container" and style "display: flex". These are hidden by map.js
-setting "display:none" and revealed by setting "display:flex".
-
-Inside the DIV#list, each store must be represented by a DIV that is an immediate
-child of the DIV#list. Within each store DIV, you must apply the class name
-"heading-value" to the element that will render the store "heading" attribute.
-
-Each store also has "address" and "notes" attributes. The map.js renders these
-attributes on the first two <p> paragraph found in the store DIV.
-
-N.B. Remove this comment from the live site.
-*/ ?>
-
 <div id="map-container" style="display: none; flex-flow: row wrap; min-height: 440px; background-color: hsl(171, 40%, 95%);">
     <div id="map" style="display: flex; flex-flow: column; max-height: 440px; width: 50%"></div>
     <div id="list" style="display: flex; flex-flow: column; width: 50%">
