@@ -1,0 +1,15 @@
+# [1] https://git-scm.com/docs/gitattributes
+# [2] https://help.github.com/en/articles/configuring-git-to-handle-line-endings
+# [3] https://adaptivepatchwork.com/2012/03/01/mind-the-end-of-your-line/
+
+# First make sure we normalise all line endings to LF in the repository.
+# N.B. [2] claims that this substitutes for core.autocrlf ...
+# N.B. [3] has an argument against this global setting.
+*       text=auto
+
+# Experiment with trying LF for all source files.
+*       text eol=lf
+*.gif   binary
+*.ico   binary
+*.jpg   binary
+*.png   binary
